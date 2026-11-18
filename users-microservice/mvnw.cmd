@@ -58,6 +58,8 @@ set ERROR_CODE=0
 @setlocal
 
 @REM ==== START VALIDATION ====
+if "%JAVA_HOME%" == "" if exist "C:\Program Files\Java\jdk-17\bin\java.exe" set "JAVA_HOME=C:\Program Files\Java\jdk-17"
+if "%JAVA_HOME%" == "" for /d %%i in ("C:\Program Files\Java\jdk-*") do if exist "%%i\bin\java.exe" set "JAVA_HOME=%%i"
 if not "%JAVA_HOME%" == "" goto OkJHome
 
 echo.
