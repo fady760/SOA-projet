@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/episodes">Gestion des Séries et Épisodes</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/episodes">Home</a>
+        </li>
+
+        <!-- Menu Episodes -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownEpisodes" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Épisodes
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEpisodes">
+            @if (authService.isAdmin()) {
+            <li><a class="dropdown-item" routerLink="/add-episode">Ajouter</a></li>
+            }
+            <li><a class="dropdown-item" routerLink="/episodes">Lister</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/rechercheParSerie">
+                Recherche Par Série
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/rechercheParTitre">
+                Recherche Par Titre
+              </a>
+            </li>
+            @if (authService.isAdmin()){
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/listeSeries">
+                Gestion des séries
+              </a>
+            </li>
+            }
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto m-2">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            @if (authService.isloggedIn) {
+            [{{ authService.loggedUser }}]
+            } @else {
+            Connexion
+            }
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            @if (!authService.isloggedIn) {
+            <li><a class="dropdown-item" routerLink="/login">Login</a></li>
+            } @else {
+            <li><a class="dropdown-item" (click)="onLogout()" role="button" style="cursor: pointer;">Logout</a></li>
+            }
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<router-outlet />

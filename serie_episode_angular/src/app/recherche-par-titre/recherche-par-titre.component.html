@@ -1,0 +1,92 @@
+<div class="container mt-4">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h5 class="m-0 font-weight-bold text-primary">Recherche d'Épisodes</h5>
+    </div>
+    <div class="card-body">
+      <!-- Méthode 1 : Recherche via API (bouton) -->
+      <form class="row g-3 mb-4">
+        <div class="col-sm-7">
+          <label class="form-label">Titre de l'épisode (via API)</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="titreEpisode"
+            name="titreEpisode"
+            placeholder="Ex: Pilot"
+          />
+        </div>
+        <div class="col-sm-auto align-self-end">
+          <button type="button" (click)="rechercherEps()" class="btn btn-primary">
+            Rechercher
+          </button>
+        </div>
+      </form>
+
+      <!-- Méthode 2 : Filtrage en direct (keyup côté client) -->
+      <form class="mb-3">
+        <div class="col-sm-7">
+          <label class="form-label">Filtrer en tapant (keyup côté client)</label>
+          <input
+            class="form-control"
+            #searchTermRef
+            (keyup)="onKeyUp(searchTermRef.value)"
+            placeholder="Filtrage instantané..."
+          />
+        </div>
+      </form>
+
+      <!-- Méthode 3 : Filtrage via pipe Angular -->
+      <form class="mb-4">
+        <div class="col-sm-7">
+          <label class="form-label">Filtrer via Pipe</label>
+          <input
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            name="searchTerm"
+            placeholder="Filtrage par pipe..."
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Numéro</th>
+            <th>Durée (min)</th>
+            <th>Saison</th>
+            <th>Série</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (episode of episodes | searchFilter: searchTerm; track episode.idEpisode) {
+            <tr>
+              <td>{{ episode.idEpisode }}</td>
+              <td>{{ episode.titreEpisode }}</td>
+              <td>{{ episode.numeroEpisode }}</td>
+              <td>{{ episode.duree }}</td>
+              <td>{{ episode.saison }}</td>
+              @if (episode.serie) {
+                <td>{{ episode.serie.titre }}</td>
+              } @else {
+                <td class="text-muted">PAS DE SÉRIE</td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="text-center text-muted">
+                Aucun épisode trouvé.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

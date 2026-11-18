@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  @if(authService.isAdmin()) {
+    <div class="col-sm-6 col-md-5 col-lg-4 mb-4"> 
+      <app-update-serie [serie]="updatedSerie"  
+                        (serieUpdated)="serieUpdated($event)"
+                        [ajout]="ajout">
+      </app-update-serie>   
+    </div>
+  }
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h5 class="m-0 font-weight-bold text-primary">Gestion des Séries</h5>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Titre Série</th>
+            <th>Genre</th>
+            <th>Année Début</th>
+            @if(authService.isAdmin()) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for(serie of series; track serie.idSerie) {
+            <tr>
+              <td>{{ serie.idSerie }}</td>
+              <td>{{ serie.titre }}</td>
+              <td>{{ serie.genre }}</td>
+              <td>{{ serie.anneeDebut }}</td>
+              @if(authService.isAdmin()) {
+                <td>
+                  <a class="btn btn-success btn-sm me-2" (click)="updateSerie(serie)">Editer</a>
+                  <a class="btn btn-danger btn-sm" (click)="supprimerSerie(serie)">Supprimer</a>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td [attr.colspan]="authService.isAdmin() ? 5 : 4" class="text-center text-muted">
+                Aucune série trouvée.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

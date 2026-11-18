@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h5 class="m-0 font-weight-bold text-primary">Liste des Épisodes</h5>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Numéro</th>
+            <th>Durée (min)</th>
+            <th>Saison</th>
+            <th>Série</th>
+            @if (authService.isAdmin()) {
+              <th>Supprimer</th>
+              <th>Modifier</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (episode of episodes; track episode.idEpisode) {
+            <tr>
+              <td>{{ episode.idEpisode }}</td>
+              <td>{{ episode.titreEpisode }}</td>
+              <td>{{ episode.numeroEpisode }}</td>
+              <td>{{ episode.duree }}</td>
+              <td>{{ episode.saison }}</td>
+              @if (episode.serie) {
+                <td>{{ episode.serie.titre }}</td>
+              } @else {
+                <td class="text-muted">PAS DE SÉRIE</td>
+              }
+              @if (authService.isAdmin()) {
+                <td>
+                  <a class="btn btn-danger" (click)="supprimerEpisode(episode)">Supprimer</a>
+                </td>
+                <td>
+                  <a class="btn btn-success" [routerLink]="['/updateEpisode', episode.idEpisode]">Modifier</a>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td [attr.colspan]="authService.isAdmin() ? 8 : 6" class="text-center text-danger">
+                <h3>Aucun épisode trouvé !</h3>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

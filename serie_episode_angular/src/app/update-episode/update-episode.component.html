@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h5 class="m-0 font-weight-bold text-primary">Modifier un Épisode :</h5>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="row">
+          <div class="col-sm-2 col-md-2 mb-3">
+            <label class="form-label">ID Épisode</label>
+            <input readonly type="text" [(ngModel)]="currentEpisode.idEpisode" name="idEpisode" class="form-control bg-light">
+          </div>
+          <div class="col-sm-5 col-md-5 mb-3">
+            <label class="form-label">Titre Épisode</label>
+            <input type="text" [(ngModel)]="currentEpisode.titreEpisode" name="titreEpisode" class="form-control">
+          </div>
+          <div class="col-sm-2 col-md-2 mb-3">
+            <label class="form-label">Numéro Épisode</label>
+            <input type="number" [(ngModel)]="currentEpisode.numeroEpisode" name="numeroEpisode" class="form-control">
+          </div>
+          <div class="col-sm-3 col-md-3 mb-3">
+            <label class="form-label">Saison</label>
+            <input type="number" [(ngModel)]="currentEpisode.saison" name="saison" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4 col-md-4 mb-3">
+            <label class="form-label">Durée (min)</label>
+            <input type="number" step="0.5" [(ngModel)]="currentEpisode.duree" name="duree" class="form-control">
+          </div>
+          <div class="col-sm-8 col-md-8 mb-3">
+            <label class="form-label">Série</label>
+            <select class="form-select" id="idSerie" name="idSerie" [(ngModel)]="updatedSerieId">
+              @for (serie of series; track serie.idSerie) {
+                <option [value]="serie.idSerie">{{ serie.titre }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <button type="button" (click)="updateEpisode()" class="btn btn-success">Modifier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
