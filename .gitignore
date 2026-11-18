@@ -23,3 +23,6 @@ yarn-error.log*
 # OS generated
 .DS_Store
 Thumbs.db
+
+# Documentation
+PROJECT_DOCUMENTATION.md
