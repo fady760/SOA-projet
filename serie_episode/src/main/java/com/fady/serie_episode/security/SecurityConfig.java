@@ -36,22 +36,22 @@ public class SecurityConfig {
 				}))
 				.authorizeHttpRequests(requests -> requests
 						// Consulter tous les épisodes, séries ou par ID / recherche : ADMIN et USER
-						.requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("ADMIN", "USER")
-						.requestMatchers(HttpMethod.GET, "/series/**").hasAnyAuthority("ADMIN", "USER")
-						.requestMatchers(HttpMethod.GET, "/rest/**").hasAnyAuthority("ADMIN", "USER")
+						.requestMatchers(HttpMethod.GET, "/api", "/api/**").hasAnyAuthority("ADMIN", "USER")
+						.requestMatchers(HttpMethod.GET, "/series", "/series/**").hasAnyAuthority("ADMIN", "USER")
+						.requestMatchers(HttpMethod.GET, "/rest", "/rest/**").hasAnyAuthority("ADMIN", "USER")
 
 						// Ajouter, Modifier, Supprimer un épisode ou une série : ADMIN uniquement
-						.requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api", "/api/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api", "/api/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/api", "/api/**").hasAuthority("ADMIN")
 
-						.requestMatchers(HttpMethod.POST, "/series/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/series/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/series/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/series", "/series/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/series", "/series/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/series", "/series/**").hasAuthority("ADMIN")
 
-						.requestMatchers(HttpMethod.POST, "/rest/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/rest/**").hasAuthority("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/rest/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/rest", "/rest/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/rest", "/rest/**").hasAuthority("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/rest", "/rest/**").hasAuthority("ADMIN")
 
 						// Tout le reste nécessite une authentification
 						.anyRequest().authenticated())

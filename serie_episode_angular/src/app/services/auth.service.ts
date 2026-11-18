@@ -55,6 +55,9 @@ export class AuthService {
   }
 
   getToken(): string {
+    if (!this.token) {
+      this.token = localStorage.getItem('jwt')!;
+    }
     return this.token;
   }
 
