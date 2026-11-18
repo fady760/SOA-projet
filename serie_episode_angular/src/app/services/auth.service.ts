@@ -33,6 +33,10 @@ export class AuthService {
     this.token = jwt;
     this.isloggedIn = true;
     this.decodeJWT();
+    if (this.loggedUser) {
+      localStorage.setItem('loggedUser', this.loggedUser);
+    }
+    localStorage.setItem('isloggedIn', 'true');
   }
 
   decodeJWT() {
@@ -76,7 +80,7 @@ export class AuthService {
     this.roles = undefined!;
     this.token = undefined!;
     this.isloggedIn = false;
-    localStorage.removeItem('jwt');
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 
