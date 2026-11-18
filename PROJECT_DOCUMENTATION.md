@@ -6,7 +6,7 @@
 1. [Vue d'Ensemble & Fonctionnalités du Projet](#1-vue-densemble--fonctionnalités-du-projet)
 2. [Architecture Globale du Système (SOA / Microservices)](#2-architecture-globale-du-système-soa--microservices)
 3. [Exploration Détaillée du Backend (Dossier par Dossier)](#3-exploration-détaillée-du-backend-dossier-par-dossier)
-   - [A. Le Microservice Métier : `serie_episode` (Port 8080)](#a-le-microservice-métier--serie_episode-port-8080)
+   - [A. Le Microservice Métier : `serie_episode` (Port 8082)](#a-le-microservice-métier--serie_episode-port-8082)
    - [B. Le Microservice d'Authentification : `users-microservice` (Port 8081)](#b-le-microservice-dauthentification--users-microservice-port-8081)
 4. [Exploration Détaillée du Frontend Angular (`serie_episode_angular`)](#4-exploration-détaillée-du-frontend-angular-serie_episode_angular)
    - [A. Comprendre l'Architecture Angular à partir de zéro](#a-comprendre-larchitecture-angular-à-partir-de-zéro)
@@ -65,10 +65,10 @@ Le système est découpé en **trois applications indépendantes** qui collabore
                                       /                               \
                                      v                                 v
           +--------------------------------------+     Secret Partagé    +--------------------------------------+
-          |   Microservice Auth (Port 8081)      | <===================> |     Microservice Métier (Port 8080)  |
+          |   Microservice Auth (Port 8081)      | <===================> |     Microservice Métier (Port 8082)  |
           |         users-microservice           | HMAC256(SecParams)    |             serie_episode            |
           |--------------------------------------|                       |--------------------------------------|
-          | • Port d'écoute : 8081               |                       | • Port d'écoute : 8080               |
+          | • Port d'écoute : 8081               |                       | • Port d'écoute : 8082               |
           | • Contexte : /users                  |                       | • Contexte : /serie_episode          |
           | • Rôle : Fabrique & Vérifie les JWT  |                       | • Rôle : Gestion Séries/Épisodes     |
           | • Gère les utilisateurs et les rôles |                       | • Filtre JWT & Contrôle d'accès      |
@@ -90,7 +90,7 @@ fady_projet_soa/
 
 ---
 
-### A. Le Microservice Métier : `serie_episode` (Port 8080)
+### A. Le Microservice Métier : `serie_episode` (Port 8082)
 
 Ce service est un **Serveur de Ressources** (*Resource Server*). Il ne gère pas les mots de passe ; il se contente de vérifier la validité du jeton JWT fourni par le client.
 
@@ -103,7 +103,7 @@ Ce service est un **Serveur de Ressources** (*Resource Server*). Il ne gère pas
   * `mysql-connector-j` : Pilote JDBC pour MySQL.
   * `lombok` : Génération automatique des getters, setters et constructeurs.
 * `src/main/resources/application.properties` :
-  * `server.port=8080` : Port d'écoute (change de 8081 à 8080 pour éviter le conflit avec le microservice users).
+  * `server.port=8082` : Port d'écoute (change de 8081 à 8082 pour éviter le conflit avec le microservice users).
   * `server.servlet.context-path=/serie_episode` : Préfixe de toutes les URLs du service.
   * `spring.datasource.url=jdbc:mysql://localhost:3306/serie_episode_db...` : Connexion à la base de données métier.
   * `spring.jpa.hibernate.ddl-auto=update` : Met à jour automatiquement la structure des tables MySQL selon les entités Java.
@@ -253,8 +253,8 @@ Si vous débutez avec Angular, voici les concepts fondamentaux expliqués simple
 * **`src/environments/environment.ts`** : Centralise les adresses IP et ports des APIs :
   ```typescript
   export const environment = {
-    apiURL: 'http://localhost:8080/serie_episode/api',
-    apiURLSerie: 'http://localhost:8080/serie_episode/series',
+    apiURL: 'http://localhost:8082/serie_episode/api',
+    apiURLSerie: 'http://localhost:8082/serie_episode/series',
   };
   ```
 * **`src/app/app.config.ts`** : La configuration globale de l'application Angular 18 (Standalone) :
@@ -307,7 +307,7 @@ Si vous débutez avec Angular, voici les concepts fondamentaux expliqués simple
     ```
   * Grâce à ce fichier, aucun composant n'a besoin d'écrire manuellement l'en-tête d'autorisation !
 * **`episode.service.ts`** :
-  * Gère tous les appels HTTP vers le microservice métier (`http://localhost:8080/serie_episode/api` et `/series`).
+  * Gère tous les appels HTTP vers le microservice métier (`http://localhost:8082/serie_episode/api` et `/series`).
   * Fournit les méthodes CRUD : `listeEpisodes()`, `ajouterEpisode()`, `supprimerEpisode()`, `consulterEpisode()`, `updateEpisode()`, `listeSeries()`, `rechercherParSerie()`, `rechercherParTitre()`, etc.
 
 #### 5. Gardiens de Routes (`Guards`)
@@ -339,7 +339,7 @@ Dans les anciennes architectures, un seul serveur gérait à la fois la base de 
 
 Dans notre architecture **Microservices / SOA** :
 1. Le **Microservice Utilisateurs (8081)** est comme un **Bureau des Passeports**. Son unique mission est de vérifier votre identité et de vous délivrer un passeport inviolable (le jeton JWT).
-2. Le **Microservice Séries (8080)** est comme un **Aéroport**. Il ne vous connaît pas personnellement et ne stocke aucun mot de passe. Mais quand vous présentez votre passeport (le jeton JWT), il vérifie le tampon de sécurité. S'il est authentique, il vous laisse passer.
+2. Le **Microservice Séries (8082)** est comme un **Aéroport**. Il ne vous connaît pas personnellement et ne stocke aucun mot de passe. Mais quand vous présentez votre passeport (le jeton JWT), il vérifie le tampon de sécurité. S'il est authentique, il vous laisse passer.
 
 ---
 
@@ -369,7 +369,7 @@ En réalité, il est composé de trois morceaux encodés en Base64 :
 Voici ce qui se passe pas à pas quand vous utilisez l'application :
 
 ```
-[Navigateur / Angular]               [Microservice Auth 8081]            [Microservice Métier 8080]
+[Navigateur / Angular]               [Microservice Auth 8081]            [Microservice Métier 8082]
          |                                      |                                     |
          |---- 1. POST /login (user, mdp) ----->|                                     |
          |                                      |-- Vérifie hash BCrypt               |
@@ -394,7 +394,7 @@ Voici ce qui se passe pas à pas quand vous utilisez l'application :
 #### Scénario 1 : Un utilisateur non connecté tente d'accéder aux données
 * L'utilisateur tape directement dans l'URL : `http://localhost:4200/episodes`.
 * **Action du Frontend** : `auth.guard.ts` intercepte la navigation, constate que le token est absent ou expiré, bloque l'affichage et redirige l'utilisateur vers `/login`.
-* Si un pirate tente d'interroger directement le backend avec `curl http://localhost:8080/serie_episode/api` :
+* Si un pirate tente d'interroger directement le backend avec `curl http://localhost:8082/serie_episode/api` :
   * `JWTAuthorizationFilter` ne trouve pas d'en-tête `Authorization`.
   * `SecurityConfig` constate que la requête n'est pas authentifiée.
   * Le serveur renvoie immédiatement une erreur **`403 Forbidden`**.
@@ -432,7 +432,7 @@ cd "c:\Users\fadis\Desktop\spiringboot dsi3\fady_projet_soa\users-microservice"
 cd "c:\Users\fadis\Desktop\spiringboot dsi3\fady_projet_soa\serie_episode"
 .\mvnw.cmd spring-boot:run
 ```
-*(Attendez l'affichage : `Started SerieEpisodeApplication in ... seconds` sur le port **8080**)*
+*(Attendez l'affichage : `Started SerieEpisodeApplication in ... seconds` sur le port **8082**)*
 
 #### Terminal 3 — Le Frontend Angular
 ```powershell
